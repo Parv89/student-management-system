@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Cognevance Technologies - Student Management System Database Schema
 -- Database: student_management_db
--- Target Engine: MySQL 8.0+
+-- Target Engine: MySQL 8.0+ / MySQL 8.4 LTS
 -- =====================================================================
 
 CREATE DATABASE IF NOT EXISTS `student_management_db`
@@ -27,13 +27,9 @@ CREATE TABLE IF NOT EXISTS `students` (
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT `pk_students` PRIMARY KEY (`id`),
     CONSTRAINT `uk_students_email` UNIQUE (`email`),
-    CONSTRAINT `uk_students_enrollment_number` UNIQUE (`enrollment_number`)
+    CONSTRAINT `uk_students_enrollment_number` UNIQUE (`enrollment_number`),
+    INDEX `idx_students_full_name` (`full_name`),
+    INDEX `idx_students_course` (`course`),
+    INDEX `idx_students_status` (`status`),
+    INDEX `idx_students_enrollment_date` (`enrollment_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ---------------------------------------------------------------------
--- Indexes for optimized querying, filtering, and search performance
--- ---------------------------------------------------------------------
-CREATE INDEX IF NOT EXISTS `idx_students_full_name` ON `students` (`full_name`);
-CREATE INDEX IF NOT EXISTS `idx_students_course` ON `students` (`course`);
-CREATE INDEX IF NOT EXISTS `idx_students_status` ON `students` (`status`);
-CREATE INDEX IF NOT EXISTS `idx_students_enrollment_date` ON `students` (`enrollment_date`);
