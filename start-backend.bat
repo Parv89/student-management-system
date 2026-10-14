@@ -6,7 +6,26 @@ echo Cognevance Technologies - Starting StudentHub Backend (Spring Boot)
 echo =====================================================================
 echo.
 
-cd /d "%~dp0backend"
+set "PROJECT_ROOT=%~dp0"
+if exist "%PROJECT_ROOT%.env" (
+    echo [INFO] Loading database credentials from .env...
+    for /f "usebackq tokens=1* delims==" %%A in ("%PROJECT_ROOT%.env") do (
+        set "key=%%A"
+        set "val=%%B"
+        if not "!key:~0,1!"=="#" (
+            set "!key!=!val!"
+        )
+    )
+)
+
+if not defined DB_USERNAME set DB_USERNAME=root
+
+if not defined DB_PASSWORD (
+    echo [INFO] DB_PASSWORD environment variable is not set.
+    set /p DB_PASSWORD="Enter MySQL password for user '%DB_USERNAME%' (press Enter if none): "
+)
+
+cd /d "%PROJECT_ROOT%backend"
 
 if defined JAVA_HOME (
     echo [INFO] Using JAVA_HOME: %JAVA_HOME%
@@ -15,6 +34,7 @@ if defined JAVA_HOME (
 )
 
 echo [INFO] Launching Spring Boot server on port 8080...
+echo [INFO] Connecting to MySQL database 'student_management_db' as '%DB_USERNAME%'...
 echo [INFO] Press Ctrl+C at any time to stop the server.
 echo.
 
